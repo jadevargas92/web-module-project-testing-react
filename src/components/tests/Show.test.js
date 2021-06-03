@@ -1,23 +1,51 @@
 import React from 'react';
-import { render, screen } from '@testing-library/react';
+import { fireEvent, getByTestId, render, screen, waitFor, queryByTestId, getByRole } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 
 import Show from './../Show';
+import Loading from '../Loading';
 
 const testShow = {
     //add in approprate test data structure here.
+        name: 'Test Name',
+        summary: 'Test Summary',
+        seasons: [
+            {id:0, name: "Season 1", episodes: []}, 
+            {id:1, name: "Season 2", episodes: []}, 
+            {id:2, name: "Season 3", episodes: []}, 
+            {id:3, name: "Season 4", episodes: []}
+        ]
 }
 
 test('renders testShow and no selected Season without errors', ()=>{
+    //Arange:
+    render(<Show show={testShow} selectedSeason={'none'}/>)
 });
 
 test('renders Loading component when prop show is null', () => {
+    render(<Show show={null} selectedSeason={'none'} />)
+
+    const loadingDataID = screen.getByTestId('loading-container')
+
+    expect(loadingDataID).toBeInTheDocument();
 });
 
 test('renders same number of options seasons are passed in', ()=>{
+    render(<Show show={testShow} selectedSeason='none' />)
+
+    expect(screen.getAllByTestId('season-option')).toHaveLength(4)
+
 });
 
 test('handleSelect is called when an season is selected', () => {
+    render(<Show show={testShow} selectedSeason='none' />)
+    const { handleSelect } = this.props
+
+    // fireEvent.change(screen.getByTestId('seasons'), { target: {value: '1'} })
+
+    userEvent.selectOptions(screen.getByTestId('seasons'), '1')
+
+    console.log(<Show />)
 });
 
 test('component renders when no seasons are selected and when rerenders with a season passed in', () => {
